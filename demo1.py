@@ -1,17 +1,22 @@
 import tkinter
+import random
 
 root = tkinter.Tk()
 root.geometry("1200x800")
 root.title("猜数字游戏")
 
 hits = 0
+submission_count = 0
 
 # 初始化输入和结果变量
 g_var = [tkinter.StringVar() for _ in range(4)]
 result_vars = [[tkinter.StringVar() for _ in range(4)] for _ in range(2)]
+# 生成目标答案
+# 生成随机目标数字
+target = [random.randint(0, 9) for _ in range(4)]
+print(target)
 
 
-    
 # 编写程序功能
 def write_num(num):
     global hits
@@ -28,8 +33,32 @@ def clear_number():
         
         
 # 提交并于正确答案比较
+# 将输入组件的4个数字存放在一个结果组件之中
 def submit_and_compare():
+    global submission_count
+    
+    var = tkinter.StringVar()
+    
+    current_result = "   ".join(var.get() for var in g_var)
+    
+    print(current_result)
+    
+    row = submission_count % 4
+    col = submission_count // 4
+    
+    if col > 1:
+        print("结果组件已满")
+        return
+    
+    result_vars[col][row].set(current_result)
+    
+    submission_count += 1
+    
     print("比较答案")
+    correct_count = sum(1 for i in range(4) if int(current_result[i]) == target[i])
+    print(f"用户输入正确的数字数量: {correct_count}")
+
+
 
 #添加清空按钮
 clear_button = tkinter.Button(root, bg="lightblue", text = "清空", font = (33), command=clear_number)
@@ -47,15 +76,15 @@ for i in range(10):
 for i in range(4):
     exec('''lb{}=tkinter.Label(root,bg="pink",font=(30),textvariable=g_var[{}])'''.format(i,i,i))
     exec("lb{}.place(x=40+{}*200,y=100,width=150,height=150)".format(i,i))
-    
+        
 
 # 存放结果组件(左边)
 for i in range(4):
-    lb_t=tkinter.Label(root,bg="pink",font=(30),text="存放结果组件")
+    lb_t=tkinter.Label(root,bg="pink",font=(30),textvariable=result_vars[0][i],anchor='w')
     lb_t.place(x=40,y=300 + (i * 70),width=350,height=40)
     
 for i in range(4):
-    lb_t=tkinter.Label(root,bg="pink",font=(30),text="存放结果组件")
+    lb_t=tkinter.Label(root,bg="pink",font=(30),textvariable=result_vars[1][i])
     lb_t.place(x=430,y=300 + (i * 70),width=350,height=40)
     
 # 添加提交按钮
