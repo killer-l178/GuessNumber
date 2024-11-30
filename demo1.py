@@ -13,8 +13,8 @@ submission_count = 0
 g_var = [tkinter.StringVar() for _ in range(4)]
 result_vars = [[tkinter.StringVar() for _ in range(4)] for _ in range(2)]
 # 生成目标答案
-# 生成随机目标数字
-target = [random.randint(0, 9) for _ in range(4)]
+# 生成随机目标数字，并且没有重复
+target = random.sample(range(10), 4)
 print(target)
 
 
@@ -53,16 +53,36 @@ def submit_and_compare():
         return
     
     """ 
-    提示用户猜对数字的个数，显示在结果集右侧
-    
+    设置A,B两个类
+    A: 数字位置都猜对了
+    B:只猜对了数字
     如果全对则提示完成挑战
     """
     
+    # 初始化A、B
+    A_nums = 0
+    B_nums = 0
+    
+    # 利用循环来计算 A，B的值
+    for i in range(4):
+        if int(current_result[i]) == target[i]:
+            A_nums += 1
+    
+    for i in range(4):
+        for j in range(4):
+            if int(current_result[i]) == target[j]:
+                B_nums += 1
+    
+            
+    
+    
+    # 将A，B的值添加到组件中
+      
     print("比较答案")
     correct_count = sum(1 for i in range(4) if int(current_result[i]) == target[i])
     
     # 将用户输入的4个数字拼接为字符串并显示在结果组件中
-    displayed_result = f"{'   '.join(current_result)}   |   正确个数:{correct_count}"
+    displayed_result = f"{'   '.join(current_result)}   |   A:{A_nums},B:{B_nums - A_nums}"
     result_vars[col][row].set(displayed_result)
     
     if correct_count == 4:
