@@ -1,5 +1,6 @@
 import tkinter
 import random
+import tkinter.messagebox as messagebox
 
 root = tkinter.Tk()
 root.geometry("1200x800")
@@ -36,12 +37,13 @@ def clear_number():
 # 将输入组件的4个数字存放在一个结果组件之中
 def submit_and_compare():
     global submission_count
-    
+    correct_count = 0
     var = tkinter.StringVar()
+    # current_result = "   ".join(var.get() for var in g_var)
     
-    current_result = "   ".join(var.get() for var in g_var)
+    # print(current_result)
     
-    print(current_result)
+    current_result = [var.get() for var in g_var]  
     
     row = submission_count % 4
     col = submission_count // 4
@@ -50,13 +52,26 @@ def submit_and_compare():
         print("结果组件已满")
         return
     
-    result_vars[col][row].set(current_result)
+    """ 
+    提示用户猜对数字的个数，显示在结果集右侧
     
-    submission_count += 1
+    如果全对则提示完成挑战
+    """
     
     print("比较答案")
     correct_count = sum(1 for i in range(4) if int(current_result[i]) == target[i])
-    print(f"用户输入正确的数字数量: {correct_count}")
+    
+    # 将用户输入的4个数字拼接为字符串并显示在结果组件中
+    displayed_result = f"{'   '.join(current_result)}   |   正确个数:{correct_count}"
+    result_vars[col][row].set(displayed_result)
+    
+    if correct_count == 4:
+        messagebox.showinfo("恭喜","挑战成功！🎉")
+        return
+    
+    
+    # 更新提交次数
+    submission_count += 1
 
 
 
